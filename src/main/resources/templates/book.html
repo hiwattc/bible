@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${book.book}"></title>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .chapter-tags {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .chapter-tag {
+            display: inline-block;
+            margin: 5px;
+            padding: 8px 12px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 15px;
+            transition: background-color 0.3s;
+        }
+
+        .chapter-tag:hover {
+            background-color: #2980b9;
+        }
+
+        .chapter-tag.active {
+            background-color: #e74c3c;
+        }
+
+        .chapter {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .chapter h2 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+
+        .chapter-text {
+            line-height: 1.8;
+            text-align: justify;
+            font-size: 16px;
+        }
+
+        .verse {
+            display: inline;
+            padding: 2px 5px; /* 기본 상태에서 고정된 여백 */
+            border-radius: 3px;
+            transition: background-color 0.2s; /* 배경색만 전환 */
+        }
+
+        .verse:hover {
+            background-color: #e8f4f8; /* hover 시 배경색만 변경 */
+        }
+
+        .verse-number {
+            font-weight: bold;
+            color: #2980b9;
+            margin-right: 5px;
+        }
+
+        .verse-text {
+            margin-right: 5px;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <h1 th:text="${book.book}"></h1>
+
+    <!-- 장 목록 (해시태그 스타일, 항상 표시) -->
+    <div class="chapter-tags">
+        <a th:href="@{/book/{book}(book=${book.book})}" class="chapter-tag">전체</a>
+        <a th:each="ch : ${book.chapters}"
+           th:href="@{/book/{book}(book=${book.book}, chapter=${ch.chapter})}"
+           th:text="${ch.chapter} + '장'"
+           th:classappend="${chapterParam} != null and ${chapterParam} == ${ch.chapter} ? 'chapter-tag active' : 'chapter-tag'"></a>
+    </div>
+    <a href="/" class="back-link">목록으로 돌아가기</a>
+
+    <div class="chapter" th:each="chapter : ${book.chapters}" th:if="${chapterParam} == null or ${chapter.chapter} == ${chapterParam}">
+        <h2 th:text="${chapter.chapter} + ' 장'"></h2>
+        <div class="chapter-text">
+            <span class="verse" th:each="verse : ${chapter.verses}">
+                <span class="verse-number" th:text="${verse.verse}"></span>
+                <span class="verse-text" th:text="${verse.text} + ' '"></span>
+            </span>
+        </div>
+    </div>
+
+    <!-- 돌아가기 링크 -->
+    <a href="/" class="back-link">목록으로 돌아가기</a>
+
+    <!-- Google Fonts 추가 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+</body>
+</html>
