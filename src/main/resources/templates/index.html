@@ -10,6 +10,7 @@
             padding: 20px;
             background-color: #f5f5f5;
             color: #333;
+            font-size: 18px; /* 기본 폰트 크기 증가 */
         }
 
         h1 {
@@ -17,37 +18,37 @@
             text-align: center;
             border-bottom: 2px solid #3498db;
             padding-bottom: 10px;
+            font-size: 28px; /* 제목 폰트 크기 증가 */
         }
 
-        /* 검색 폼 스타일 */
         .search-form {
             text-align: center;
             margin: 20px 0;
         }
 
         .search-form input[type="text"] {
-            padding: 8px;
-            width: 200px;
+            padding: 10px; /* 입력창 크기 증가 */
+            width: 250px;
             border: 1px solid #ddd;
             border-radius: 5px;
-            font-size: 14px;
+            font-size: 18px; /* 입력 폰트 크기 증가 */
         }
 
         .search-form button {
-            padding: 8px 15px;
+            padding: 10px 20px; /* 버튼 크기 증가 */
             background-color: #3498db;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
+            font-size: 18px; /* 버튼 폰트 크기 증가 */
         }
 
         .search-form button:hover {
             background-color: #2980b9;
         }
 
-        /* 해시태그 스타일의 책 목록 */
         .book-tags {
             margin: 20px 0;
             text-align: center;
@@ -56,16 +57,44 @@
         .book-tag {
             display: inline-block;
             margin: 5px;
-            padding: 8px 12px;
+            padding: 10px 15px; /* 패딩 증가로 클릭 영역 확대 */
             background-color: #3498db;
             color: white;
             text-decoration: none;
             border-radius: 15px;
             transition: background-color 0.3s;
+            font-size: 20px; /* 해시태그 폰트 크기 증가 */
         }
 
         .book-tag:hover {
             background-color: #2980b9;
+        }
+
+        /* 스마트폰 반응형 조정 */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+                font-size: 16px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .search-form input[type="text"] {
+                width: 200px;
+                font-size: 16px;
+            }
+
+            .search-form button {
+                padding: 8px 15px;
+                font-size: 16px;
+            }
+
+            .book-tag {
+                padding: 8px 12px;
+                font-size: 18px;
+            }
         }
     </style>
 </head>
