@@ -20,7 +20,10 @@ public class BibleController {
 
     @GetMapping("/")
     public String index(Model model) throws Exception {
-        model.addAttribute("books", bibleService.getBookList());
+        //model.addAttribute("books", bibleService.getBookList());
+        model.addAttribute("memoryList", bibleService.getMemoryList());
+        model.addAttribute("books_old", bibleService.getOldBookList());
+        model.addAttribute("books_new", bibleService.getNewBookList());
         return "index";
     }
 
@@ -40,7 +43,8 @@ public class BibleController {
 
     @GetMapping("/search")
     public String search(@RequestParam String keyword, Model model) throws Exception {
-        model.addAttribute("books", bibleService.searchBooks(keyword));
+        model.addAttribute("books_old", bibleService.searchOldBooks(keyword));
+        model.addAttribute("books_new", bibleService.searchNewBooks(keyword));
         return "index";
     }
 
