@@ -183,6 +183,14 @@
         </div>
     </div>
 
+    <div class="chapter-tags" th:if="${book.currentChapter} != null">
+        <!-- previous page-->
+        <a th:href="@{/book/{book}(book=${book.book}, chapter=${book.preChapter})}"
+        th:text="${book.preChapter} + '장'" class="chapter-prenext-tag" th:if="${book.preChapter} != null"></a>
+        <!-- next page-->
+        <a th:href="@{/book/{book}(book=${book.book}, chapter=${book.nextChapter})}"
+        th:text="${book.nextChapter} + '장'" class="chapter-prenext-tag" th:if="${book.nextChapter} != null"></a>
+    </div>
     <!-- 돌아가기 링크 -->
     <a href="/" class="back-link">목록으로 돌아가기</a>
 
