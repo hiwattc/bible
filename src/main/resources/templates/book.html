@@ -164,6 +164,68 @@
         .font-size-btn:focus {
             outline: 2px solid #e38d14;
         }
+
+        /* 블루라이트 차단 스위치 디자인 */
+        .bluelight-switch {
+            position: relative;
+            display: inline-block;
+            width: 54px;
+            height: 30px;
+            vertical-align: middle;
+        }
+        .bluelight-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 30px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+        .bluelight-switch input:checked + .slider {
+            background-color: #f7b731;
+        }
+        .bluelight-switch input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+
+        /* 블루라이트 차단 필터 */
+        .bluelight-filter {
+            position: fixed;
+            z-index: 9999;
+            pointer-events: none;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(255, 220, 120, 0.18);
+            mix-blend-mode: multiply;
+        }
+        @media (max-width: 600px) {
+            .bluelight-switch {
+                width: 44px;
+                height: 24px;
+            }
+            .slider:before {
+                height: 16px;
+                width: 16px;
+                left: 3px;
+                bottom: 3px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -197,10 +259,15 @@
 
     <a href="/" class="back-link">목록으로 돌아가기</a>
 
-    <!-- 폰트 크기 조절 버튼 (라벨 제거, 원형/입체 디자인) -->
-    <div style="text-align:center; margin: 20px 0;">
+    <!-- 폰트 크기 조절 버튼 (라벨 제거, 원형/입체 디자인) + 블루라이트 차단 스위치 -->
+    <div style="text-align:center; margin: 20px 0; display: flex; justify-content: center; align-items: center; gap: 16px;">
         <button id="font-decrease" class="font-size-btn">-</button>
         <button id="font-increase" class="font-size-btn">+</button>
+        <!-- 블루라이트 차단 스위치 -->
+        <label class="bluelight-switch" style="margin-left:24px;">
+            <input type="checkbox" id="bluelight-toggle">
+            <span class="slider"></span>
+        </label> 
     </div>
 
     <div class="chapter" th:each="chapter : ${book.chapters}" th:if="${chapterParam} == null or ${chapter.chapter} == ${chapterParam}">
@@ -227,7 +294,7 @@
     <!-- Google Fonts 추가 -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
 
-    <!-- 폰트 크기 조절 스크립트 -->
+    <!-- 폰트 크기/블루라이트 스크립트 -->
     <script>
         (function() {
             const minFontSize = 16;
@@ -260,6 +327,36 @@
 
             // 페이지 로드 시 저장된 폰트 크기 적용
             setFontSize(currentFontSize);
+
+            // 블루라이트 차단 기능
+            const bluelightToggle = document.getElementById('bluelight-toggle');
+            const BL_FILTER_ID = 'bluelight-filter-layer';
+
+            function setBluelightFilter(on) {
+                if (on) {
+                    if (!document.getElementById(BL_FILTER_ID)) {
+                        const filter = document.createElement('div');
+                        filter.className = 'bluelight-filter';
+                        filter.id = BL_FILTER_ID;
+                        document.body.appendChild(filter);
+                    }
+                    localStorage.setItem('bibleBluelight', 'on');
+                } else {
+                    const filter = document.getElementById(BL_FILTER_ID);
+                    if (filter) filter.remove();
+                    localStorage.setItem('bibleBluelight', 'off');
+                }
+            }
+
+            // 스위치 상태 복원
+            if (localStorage.getItem('bibleBluelight') === 'on') {
+                bluelightToggle.checked = true;
+                setBluelightFilter(true);
+            }
+
+            bluelightToggle.addEventListener('change', function() {
+                setBluelightFilter(this.checked);
+            });
         })();
     </script>
 </body>
