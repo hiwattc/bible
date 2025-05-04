@@ -140,6 +140,30 @@
                 font-size: 27px; /* 18px * 1.5 = 27px */
             }
         }
+
+        .font-size-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            margin: 0 10px;
+            font-size: 32px;
+            font-weight: bold;
+            color: #fff;
+            background: linear-gradient(145deg, #3498db 60%, #6dd5fa 100%);
+            box-shadow: 0 4px 16px rgba(52, 152, 219, 0.25), 0 2px 4px rgba(0,0,0,0.10);
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+            outline: none;
+        }
+        .font-size-btn:active {
+            background: linear-gradient(145deg, #217dbb 60%, #3498db 100%);
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.18);
+            transform: scale(0.96);
+        }
+        .font-size-btn:focus {
+            outline: 2px solid #e38d14;
+        }
     </style>
 </head>
 <body>
@@ -173,6 +197,12 @@
 
     <a href="/" class="back-link">목록으로 돌아가기</a>
 
+    <!-- 폰트 크기 조절 버튼 (라벨 제거, 원형/입체 디자인) -->
+    <div style="text-align:center; margin: 20px 0;">
+        <button id="font-decrease" class="font-size-btn">-</button>
+        <button id="font-increase" class="font-size-btn">+</button>
+    </div>
+
     <div class="chapter" th:each="chapter : ${book.chapters}" th:if="${chapterParam} == null or ${chapter.chapter} == ${chapterParam}">
         <h2 th:text="${chapter.chapter} + ' 장'"></h2>
         <div class="chapter-text">
@@ -196,5 +226,41 @@
 
     <!-- Google Fonts 추가 -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- 폰트 크기 조절 스크립트 -->
+    <script>
+        (function() {
+            const minFontSize = 16;
+            const maxFontSize = 60;
+            const defaultFontSize = 30;
+            // localStorage에서 폰트 크기 불러오기
+            let currentFontSize = parseInt(localStorage.getItem('bibleFontSize')) || defaultFontSize;
+
+            function setFontSize(size) {
+                document.querySelectorAll('.chapter-text').forEach(function(el) {
+                    el.style.fontSize = size + 'px';
+                });
+                // localStorage에 저장
+                localStorage.setItem('bibleFontSize', size);
+            }
+
+            document.getElementById('font-increase').addEventListener('click', function() {
+                if (currentFontSize < maxFontSize) {
+                    currentFontSize += 2;
+                    setFontSize(currentFontSize);
+                }
+            });
+
+            document.getElementById('font-decrease').addEventListener('click', function() {
+                if (currentFontSize > minFontSize) {
+                    currentFontSize -= 2;
+                    setFontSize(currentFontSize);
+                }
+            });
+
+            // 페이지 로드 시 저장된 폰트 크기 적용
+            setFontSize(currentFontSize);
+        })();
+    </script>
 </body>
 </html>
