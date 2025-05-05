@@ -51,12 +51,14 @@ public class BibleController {
         return "book";
     }
 
+    /*
     @GetMapping("/search")
     public String search(@RequestParam String keyword, Model model) throws Exception {
         model.addAttribute("books_old", bibleService.searchOldBooks(keyword));
         model.addAttribute("books_new", bibleService.searchNewBooks(keyword));
         return "index";
     }
+   */
 
 
 }

@@ -117,6 +117,107 @@
                 font-size: 27px; /* 18px * 1.5 = 27px */
             }
         }
+
+        .search-card {
+            background: #fffbe6;
+            border: 1px solid #ffe082;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            margin: 16px auto;
+            padding: 18px 22px;
+            max-width: 700px;
+        }
+        .search-card-title {
+            font-weight: bold;
+            color: #e38d14;
+            margin-bottom: 8px;
+            font-size: 22px;
+        }
+        .search-card-content {
+            font-size: 20px;
+            color: #333;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            gap: 10px;
+            flex-wrap: wrap;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .pagination a {
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #3498db;
+            border: 1px solid #3498db;
+            border-radius: 4px;
+            transition: all 0.3s;
+            margin: 2px;
+        }
+        .pagination a:hover {
+            background-color: #3498db;
+            color: white;
+        }
+        .pagination .active {
+            background-color: #3498db;
+            color: white;
+        }
+        .pagination .disabled {
+            color: #ccc;
+            border-color: #ccc;
+            pointer-events: none;
+        }
+
+        /* 토글 스위치 스타일 */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 80px;
+            height: 40px;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 40px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 32px;
+            width: 32px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #3498db;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(40px);
+        }
     </style>
 </head>
 <body>
@@ -129,10 +230,33 @@
            class="book-tag-memory"></a>
     </div>
     <!-- 검색 폼 -->
-    <form th:action="@{/search}" method="get" class="search-form">
+    <form th:action="@{/search}" method="get" class="search-form" id="searchForm">
         <input type="text" name="keyword" placeholder="검색어 입력">
+        <label class="switch">
+            <input type="checkbox" name="contentSearch" id="contentSearch" th:checked="${contentSearch} ? 'checked' : null">
+            <span class="slider"></span>
+        </label>
         <button type="submit">검색</button>
     </form>
+    <!-- 검색 결과 카드 리스트 -->
+    <div id="search-results">
+        <div th:if="${searchResults != null}">
+            <div th:each="result : ${searchResults}" class="search-card">
+                <div class="search-card-title" th:text="${result.book} + ' ' + ${result.chapter} + ':' + ${result.verse}"></div>
+                <div class="search-card-content" th:utext="${result.keyword != null ? #strings.replace(result.text, result.keyword, '<span style=&quot;color: blue&quot;>' + result.keyword + '</span>') : result.text}"></div>
+            </div>
+            
+            <!-- 페이징 UI -->
+            <div th:if="${totalPages > 0}" class="pagination">
+                <a th:if="${currentPage > 0}" th:href="@{/search(page=${currentPage - 1}, keyword=${param.keyword}, contentSearch=${param.contentSearch})}">&laquo;</a>
+                <a th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                   th:href="@{/search(page=${i}, keyword=${param.keyword}, contentSearch=${param.contentSearch})}"
+                   th:text="${i + 1}"
+                   th:class="${currentPage == i ? 'active' : ''}"></a>
+                <a th:if="${currentPage < totalPages - 1}" th:href="@{/search(page=${currentPage + 1}, keyword=${param.keyword}, contentSearch=${param.contentSearch})}">&raquo;</a>
+            </div>
+        </div>
+    </div>
 
     <!-- 책 목록 (해시태그 스타일) -->
     <div class="book-tags">
